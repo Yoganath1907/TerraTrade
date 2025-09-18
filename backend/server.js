@@ -2,6 +2,7 @@ const express = require('express');
 const { generatePdf } = require("./makePdf");
 const path = require("path");
 const { addFarmerId, verifyFarmerId } = require('./verifyFarmerOnSui');
+const {initialiseDb, produceModel} = require("./connectToDb");
 const cors = require("cors");
 const multer = require("multer");
 const QRCode = require("qrcode");
@@ -12,6 +13,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 require('dotenv').config();
+
+initialiseDb();
+
 
 app.post("/api/generatePdf", upload.single("photo"), async (req, res) => {
     try {
@@ -88,6 +92,38 @@ app.post("/api/verify-farmer", async (req, res) => {
         res.status(500).send("Error verifying farmer");
     }
 });
+
+app.post("/api/addToDb", async (req, res) => {
+    console.log("hiii")
+    const { farmerName, produceName, contactNumber, grade, harvestDate, quantity, fairPrice } = req.body;
+    console.log(req.body);
+
+    try{
+        const produce = new produceModel(req.body);  
+        await produce.save();
+        console.log("Saving to DB:", req.body);
+
+
+        res.status(201).json({
+            success: true
+        });
+
+    }catch (err) {
+        console.log("cannot add into db")
+    }
+
+}
+)
+
+
+
+
+
+
+
+
+
+
 
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 app.listen(3000, () => console.log("Server running on port 3000"));
