@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href = "styles.css" rel = "stylesheet">
+    <title>TerraTrade</title>
+</head>
+<body>
+    <h1 id = "titleh1">TerraTrade</h1>
+    <h2 id = "titleh2">Farmer Onboarding</h2>
+    <form id = "myForm">
+        <label for = "farmerName">Name:</label>
+        <input id = "farmerName" name = "Name" type = "text" placeholder = "Farmer's Name">
+
+        <label for = "dob">Date Of Birth:</label>
+        <input id = "dob" type  = "date" name = "Date of birth">
+
+        <label for = "contactNumber">Phone number:</label>
+        <input id = "contactNumber" name = "Contact number" type = "number" placeholder = "+91..........">
+
+        <label for = "aadhaar">Aadhaar number:</label>
+        <input id = "aadhaar" name = "Aadhaar number" type = "text" placeholder = "aadhaar number">
+
+        <label for = "district">District:</label>
+        <input id = "district" name = "District" type = "text">
+
+        <label for = "state">State:</label>
+        <input id = "state" name = "State" type = "text">
+
+        <label for = "photoInput">Passport size photo:</label>
+        <input type="file" id="photoInput" name = "photo" accept="image/*" />
+
+        <button type = "submit">Submit</button>
+    </form>
+<script src = "./script.js"></script>
+</body>
+</html>
