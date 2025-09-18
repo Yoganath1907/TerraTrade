@@ -1,6 +1,7 @@
 const express = require('express');
 const { generatePdf } = require("./makePdf");
 const path = require("path");
+const {db }= require("./database");
 const { addFarmerId, verifyFarmerId } = require('./verifyFarmerOnSui');
 const cors = require("cors");
 const multer = require("multer");
@@ -88,6 +89,17 @@ app.post("/api/verify-farmer", async (req, res) => {
         res.status(500).send("Error verifying farmer");
     }
 });
+
+app.get("/api/buyerhome", async (req, res) => {
+    try{
+        const [records]= await db.execute("SELECT * FROM produces")
+        res.json(records)
+    }
+    catch(err){
+        console.log(err);
+    }
+})
+
 
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 app.listen(3000, () => console.log("Server running on port 3000"));
