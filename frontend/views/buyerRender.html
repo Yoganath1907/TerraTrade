@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Portal - TerraTrade</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TerraTrade - Buyer Portal</h1>
+        </header>
+
+        <div class="filters">
+            <div class="filter-group">
+                <input type="text" id="searchInput" placeholder="Search by produce or farmer...">
+                <select id="gradeFilter">
+                    <option value="">All Grades</option>
+                    <option value="A">Grade A</option>
+                    <option value="B">Grade B</option>
+                    <option value="C">Grade C</option>
+                </select>
+                <select id="sortBy">
+                    <option value="date">Latest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
+                <button onclick="applyFilters()">Apply Filters</button>
+                <button onclick="resetFilters()">Reset</button>
+            </div>
+        </div>
+
+        <div id="produceContainer">
+            <div class="loading">Loading produces...</div>
+        </div>
+    </div>
+
+    <!-- Purchase Modal -->
+    <div id="purchaseModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closePurchaseModal()">&times;</span>
+            <h2>Complete Your Purchase</h2>
+            <div id="selectedProduceInfo"></div>
+            
+            <form id="purchaseForm">
+                <div class="form-group">
+                    <label for="buyerName">Full Name *</label>
+                    <input type="text" id="buyerName" name="buyerName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="buyerPhone">Phone Number *</label>
+                    <input type="tel" id="buyerPhone" name="buyerPhone" pattern="[0-9]{10}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="buyerEmail">Email Address *</label>
+                    <input type="email" id="buyerEmail" name="buyerEmail" required>
+                </div>
+                
+                <button type="submit" class="submit-button">Proceed to Payment (80% Now)</button>
+            </form>
+            
+            <div id="formContainer"></div>
+        </div>
+    </div>
+
+    <script src="../buyerRender.js"></script>
+</body>
+</html>
