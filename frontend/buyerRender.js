@@ -124,9 +124,9 @@ document.getElementById('purchaseForm').addEventListener('submit', async (e) => 
     const formContainer = document.getElementById('formContainer');
 
     const data = {
-        buyerName: form.buyerName.value,
-        buyerPhone: form.buyerPhone.value,
-        buyerEmail: form.buyerEmail.value,
+        buyerName: form.elements['buyerName'].value.trim(),
+        buyerPhone: form.elements['buyerPhone'].value.trim(),
+        buyerEmail: form.elements['buyerEmail'].value.trim(),
         produceId: selectedProduce._id,
         totalAmount: parseFloat(selectedProduce.fairPrice)
     };

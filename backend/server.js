@@ -1,7 +1,6 @@
 const express = require('express');
 const { generatePdf } = require("./makePdf");
 const path = require("path");
-const {db }= require("./database");
 const { addFarmerId, verifyFarmerId } = require('./verifyFarmerOnSui');
 const { addProduceId, verifyProduceId } = require('./verifyProduceOnSui');
 const {initialiseDb, produceModel, purchaseModel} = require("./connectToDb");
@@ -96,7 +95,9 @@ app.post("/api/verify-farmer", async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
+
+
+
 app.post("/api/addToDb", async (req, res) => {
     const { farmerName, produceName, contactNumber, grade, harvestDate, quantity, fairPrice } = req.body;
 
@@ -130,7 +131,13 @@ app.get("/api/getAllProduce", async (req, res) => {
 // UPDATED: Purchase initiation with QR generation
 app.post("/api/initiatePurchase", async (req, res) => {
     try {
-        const { buyerName, buyerPhone, buyerEmail, produceId, totalAmount } = req.body;
+        
+       const { buyerName, buyerPhone, buyerEmail, produceId, totalAmount } = req.body;
+        /*buyerName = req.body.buyerName;
+        buyerPhone = req.body.buyerPhone;
+        buyerEmail = req.body.buyerEmail;
+        produceId = req.body.produceId;
+        totalAmount = req.body.totalAmount;*/
 
         // Get produce details
         const produce = await produceModel.findById(produceId);
@@ -151,21 +158,16 @@ app.post("/api/initiatePurchase", async (req, res) => {
             .update(JSON.stringify(purchaseData) + process.env.SUI_PRIVATE_KEY)
             .digest('hex');
 
-        const result = await addProduceId(purchaseHash);
-        if (result.events.some(event => event.type.includes('ProduceIdAdded'))) {
-            res.json({ success: true });
-        } else {
-            res.json({ success: false });
-        }
-        } catch (err) {
+        
+         /*catch (err) {
             console.error("Add Produce error:", err);
             res.status(500).send("Error adding Produce");
             return; // Ensure the function exits after handling the error
-        }
+        }*/
 
-        try {
+        
         // Create purchase record
-        const purchase = new purchaseModel({
+        const purchase = await new purchaseModel({
             buyerName,
             buyerPhone,
             buyerEmail,
@@ -190,8 +192,16 @@ app.post("/api/initiatePurchase", async (req, res) => {
         const verificationUrl = `${req.protocol}://${req.get('host')}/verifyDelivery.html?token=${purchaseData.purchaseId}&pid=${purchase._id}`;
 
         console.log(`80% of ₹${purchase.paidAmount} released to farmer for produce ID ${produceId}`);
+        try{
+            const result = await produceModel.findByIdAndDelete(produceId);
+            console.log(result);
+        }
+        catch(err){console.log(result)}
 
-        res.json({ 
+       
+        const result = await addProduceId(purchaseHash);
+        if (result.events.some(event => event.type.includes('ProduceIdAdded'))) {
+            res.json({ 
             success: true, 
             purchaseId: purchase._id,
             verificationUrl: verificationUrl,
@@ -201,7 +211,12 @@ app.post("/api/initiatePurchase", async (req, res) => {
             remainingAmount: totalAmount * 0.2,
             message: "QR code generated. Please download and attach to produce package."
         });
-    } catch (err) {
+        } else {
+            res.json({ success: false });
+        }
+
+
+        } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: err.message });
     }
@@ -288,21 +303,9 @@ app.post("/api/checkHash", async (req, res) => {
     }
 });
 
-=======
-app.get("/api/buyerhome", async (req, res) => {
-    try{
-        const [records]= await db.execute("SELECT * FROM produces")
-        res.json(records)
-    }
-    catch(err){
-        console.log(err);
-    }
-})
 
 
->>>>>>> buyerSellerTrial
-app.use(express.static(path.join(__dirname, '..', 'frontend')));
-app.listen(3000, () => console.log("Server running on port 3000"));
+
 
 app.post("/api/verify-produce", async (req, res) => {
     try {
@@ -318,4 +321,5 @@ app.post("/api/verify-produce", async (req, res) => {
         console.error("Verify Produce error:", err);
         res.status(500).send("Error verifying Produce");
     }
-});
+});app.use(express.static(path.join(__dirname, '..', 'frontend')));
+app.listen(3000, () => console.log("Server running on port 3000"));

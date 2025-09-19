@@ -48,7 +48,7 @@ async function verifyProduceId(hash) {
 
     const tx = new TransactionBlock();
     tx.moveCall({
-        target: `${PACKAGE_ID}::isproduceonchain::verifProduceId`,
+        target: `${PACKAGE_ID}::isproduceonchain::verifyProduceId`,
         arguments: [
             tx.object(SHARED_OBJECT_ID),
             tx.pure(Array.from(vector), "vector<u8>")
