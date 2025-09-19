@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <title>test</title>
+        <link href="forVerification.css" rel="stylesheet" >
+        
+    </head>
+    <body>
+        <h1>TerraTrade — Verify Farmer (Scan QR)</h1>
+
+  <div>
+    <div id="loading"></div>
+  <div id="popup-message"></div>
+    <div id="video"></div>
+
+    <div id="controls">
+      <button id="startBtn">Start Camera & Scan</button>
+      <button id="stopBtn" disabled>Stop</button>
+      <button id="scanFileBtn">Scan from Image File</button>
+      <input type="file" id="fileInput" accept="image/*" style="display:none" />
+      <a href="index.html" style="margin-left:auto; align-self:center;">Back to Onboard</a>
+    </div>
+  </div>
+
+  <div id="result">
+    <strong>Scan status:</strong> <span id="status">idle</span>
+    <div id="farmerDetails"></div>
+  </div>
+  
+
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="../verifyProduce.js"></script>
+    
+    
+    </body>
+
+</html>

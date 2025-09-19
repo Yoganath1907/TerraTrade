@@ -2,6 +2,7 @@ const express = require('express');
 const { generatePdf } = require("./makePdf");
 const path = require("path");
 const { addFarmerId, verifyFarmerId } = require('./verifyFarmerOnSui');
+const { addProduceId, verifyProduceId } = require('./verifyProduceOnSui');
 const {initialiseDb, produceModel, purchaseModel} = require("./connectToDb");
 const cors = require("cors");
 const multer = require("multer");
@@ -148,6 +149,19 @@ app.post("/api/initiatePurchase", async (req, res) => {
             .update(JSON.stringify(purchaseData) + process.env.SUI_PRIVATE_KEY)
             .digest('hex');
 
+        const result = await addProduceId(purchaseHash);
+        if (result.events.some(event => event.type.includes('ProduceIdAdded'))) {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false });
+        }
+        } catch (err) {
+            console.error("Add Produce error:", err);
+            res.status(500).send("Error adding Produce");
+            return; // Ensure the function exits after handling the error
+        }
+
+        try {
         // Create purchase record
         const purchase = new purchaseModel({
             buyerName,
@@ -185,12 +199,12 @@ app.post("/api/initiatePurchase", async (req, res) => {
             remainingAmount: totalAmount * 0.2,
             message: "QR code generated. Please download and attach to produce package."
         });
-
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: err.message });
     }
 });
+
 
 // UPDATED: Verify QR through special URL only
 app.post("/api/verifyDelivery", async (req, res) => {
@@ -274,3 +288,19 @@ app.post("/api/checkHash", async (req, res) => {
 
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 app.listen(3000, () => console.log("Server running on port 3000"));
+
+app.post("/api/verify-produce", async (req, res) => {
+    try {
+        const { decodedText } = req.body;
+        const result = await verifyProduceId(decodedText);
+
+        if (result.events.some(event => event.type.includes('ProduceIdExists'))) {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false });
+        }
+    } catch (err) {
+        console.error("Verify Produce error:", err);
+        res.status(500).send("Error verifying Produce");
+    }
+});
