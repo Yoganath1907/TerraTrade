@@ -1,6 +1,7 @@
 const express = require('express');
 const { generatePdf } = require("./makePdf");
 const path = require("path");
+const {db }= require("./database");
 const { addFarmerId, verifyFarmerId } = require('./verifyFarmerOnSui');
 const { addProduceId, verifyProduceId } = require('./verifyProduceOnSui');
 const {initialiseDb, produceModel, purchaseModel} = require("./connectToDb");
@@ -95,6 +96,7 @@ app.post("/api/verify-farmer", async (req, res) => {
     }
 });
 
+<<<<<<< HEAD
 app.post("/api/addToDb", async (req, res) => {
     const { farmerName, produceName, contactNumber, grade, harvestDate, quantity, fairPrice } = req.body;
 
@@ -286,6 +288,19 @@ app.post("/api/checkHash", async (req, res) => {
     }
 });
 
+=======
+app.get("/api/buyerhome", async (req, res) => {
+    try{
+        const [records]= await db.execute("SELECT * FROM produces")
+        res.json(records)
+    }
+    catch(err){
+        console.log(err);
+    }
+})
+
+
+>>>>>>> buyerSellerTrial
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 app.listen(3000, () => console.log("Server running on port 3000"));
 
